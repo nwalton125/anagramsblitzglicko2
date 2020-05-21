@@ -2,7 +2,7 @@ from copy import deepcopy
 
 #Players are of the form (name, rating, multiplier)
 def new_player_rating():
-	return (2000, 3)
+	return (1200, 5)
 
 #Sums the integers from a to b inclusive. Not needed in the current implementation.
 def sum_ints(a, b):
@@ -30,13 +30,14 @@ def elo_rate_game(player_dict, game_result, K = 20, mpr_reducer = 0.25):
 	new_ratings = {p: player_dict[p] for p in game_result[0]}
 	bags = game_result[1]
 	player_names = list(game_result[0])
+	game_size_mpr = 1/(len(game_result[0]) - 1)
 	while bags > 0:
 		for (p1ind, p1) in enumerate(player_names):
 			for p2 in player_names[p1ind+1:]:
 				total_score = game_result[0][p1] + game_result[0][p2]
 				p1_dev_from_exp = game_result[0][p1] / total_score - elo_winrate(old_ratings[p1][0], old_ratings[p2][0])
-				new_ratings[p1] = (new_ratings[p1][0] + p1_dev_from_exp * K * new_ratings[p1][1], new_ratings[p1][1])
-				new_ratings[p2] = (new_ratings[p2][0] - p1_dev_from_exp * K * new_ratings[p2][1], new_ratings[p1][1])
+				new_ratings[p1] = (new_ratings[p1][0] + p1_dev_from_exp * K * new_ratings[p1][1] * game_size_mpr, new_ratings[p1][1])
+				new_ratings[p2] = (new_ratings[p2][0] - p1_dev_from_exp * K * new_ratings[p2][1] * game_size_mpr, new_ratings[p2][1])
 				#print(old_ratings[p1], new_ratings[p1], old_ratings[p2], new_ratings[p2])
 			new_ratings[p1] = (new_ratings[p1][0], max(1, new_ratings[p1][1] - mpr_reducer))
 		old_ratings = deepcopy(new_ratings)
