@@ -2,7 +2,7 @@ from copy import deepcopy
 
 #Players are of the form (name, rating, multiplier)
 def new_player_rating():
-	return (1200, 3)
+	return (2000, 3)
 
 #Sums the integers from a to b inclusive. Not needed in the current implementation.
 def sum_ints(a, b):
